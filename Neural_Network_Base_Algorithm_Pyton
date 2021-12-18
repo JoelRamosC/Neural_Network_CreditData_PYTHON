@@ -1,0 +1,28 @@
+# Convert to a DataFrame and render.
+import pandas as pd
+base = pd.DataFrame.from_records(rows)
+
+previsoes = base.iloc[:,1:4].values
+classe = base.iloc[:,4].values
+
+from sklearn.preprocessing import Imputer
+imputer = Imputer(missing_values = "NaN", strategy = "mean", axis = 0)
+imputer = imputer.fit(previsoes[:,1:4])
+previsoes[:,1:4] = imputer. transtorm(previsoes[:,1:4])
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler
+previsoes = scaler.fit_transform(previsoes)
+
+from sklearn.model_selection import train_test_split
+previsoes_treinamento, previsoes_teste, classe_treinamento, classe_teste = train_test_split(previsoes, classe,  test_size=0.33, random_state=42)
+
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
+
+classificador = Sequential()
+classificador.add(Dense(units = 2, activation = "relu", input_dim = 3))
+classificador.add(Dense(units = 2, activation = "relu"))
+classificador.add(Dense(units = 1, activation = "sigmoid"))
+classificador.compile(optimizer = "adam", loss = "binary_crossentropy", metrics = ["accuracy"])
